@@ -15,13 +15,8 @@
 keypoint infer for onnx
 """
 import os
-import time
-import math
-import glob
-from functools import reduce
 import yaml
 
-from PIL import Image
 import cv2
 import numpy as np
 import paddle
@@ -29,8 +24,6 @@ from preprocess import preprocess, NormalizeImage, Permute
 from keypoint_preprocess import EvalAffine, TopDownEvalAffine, expand_crop
 from keypoint_postprocess import HrHRNetPostProcess, HRNetPostProcess
 from visualize import draw_pose
-from paddle.inference import Config
-from paddle.inference import create_predictor
 from utils import argsparser, Timer
 from benchmark_utils import PaddleInferBenchmark
 from infer import Detector, get_test_images, print_arguments
