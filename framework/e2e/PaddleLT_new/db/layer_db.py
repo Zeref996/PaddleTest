@@ -24,7 +24,7 @@ class LayerBenchmarkDB(object):
     layer benchmark 交互模块
     """
 
-    def __init__(self, storage="apibm_config.yaml"):
+    def __init__(self, baseline_comment="baseline_CE_layer_benchmark", storage="apibm_config.yaml"):
         """
         :param storage: 信息配置文件
         """
@@ -41,7 +41,7 @@ class LayerBenchmarkDB(object):
         self.AGILE_PIPELINE_BUILD_ID = int(os.environ.get("AGILE_PIPELINE_BUILD_ID", 0))
 
         # 例行标识
-        self.baseline_comment = "baseline_CE_layer_benchmark"
+        self.baseline_comment = baseline_comment
         self.comment = "layer_benchmark_xly_{}".format(self.AGILE_PIPELINE_BUILD_ID)
         self.ci = 0
 
@@ -56,6 +56,7 @@ class LayerBenchmarkDB(object):
 
         # 测试配置
         self.testing = os.environ.get("TESTING")
+        self.testing_mode = os.environ.get("TESTING_MODE")
         self.plt_perf_content = os.environ.get("PLT_PERF_CONTENT")
 
         # 子图种类信息
@@ -104,13 +105,20 @@ class LayerBenchmarkDB(object):
         """
         db = DB(storage=self.storage)
 
+        if bool(error_list):
+            result = "失败"
+        else:
+            result = "成功"
+
         # 插入layer_job
         latest_id = db.insert_job(
             comment=self.comment,
             status="running",
+            result=result,
             env_info=json.dumps(self.env_info),
             framework=self.framework,
             agile_pipeline_build_id=self.AGILE_PIPELINE_BUILD_ID,
+            testing_mode=self.testing_mode,
             testing=self.testing,
             plt_perf_content=self.plt_perf_content,
             layer_type=self.layer_type,
@@ -128,7 +136,7 @@ class LayerBenchmarkDB(object):
         # 保存job id到txt
         with open("job_id.txt", "w") as file:
             file.write(str(latest_id))
-        self.logger.get_log().info("性能测试job_id: {}".format(latest_id))
+        self.logger.get_log().info("录入最新latest数据的job_id: {}".format(latest_id))
 
         # 插入layer_case
         for title, perf_dict in data_dict.items():
@@ -169,13 +177,20 @@ class LayerBenchmarkDB(object):
         """
         db = DB(storage=self.storage)
 
+        if bool(error_list):
+            result = "失败"
+        else:
+            result = "成功"
+
         # 插入layer_job
         basleine_id = db.insert_job(
             comment=self.baseline_comment,
             status="running",
+            result=result,
             env_info=json.dumps(self.env_info),
             framework=self.framework,
             agile_pipeline_build_id=self.AGILE_PIPELINE_BUILD_ID,
+            testing_mode=self.testing_mode,
             testing=self.testing,
             plt_perf_content=self.plt_perf_content,
             layer_type=self.layer_type,
@@ -193,7 +208,7 @@ class LayerBenchmarkDB(object):
         # 保存job id到txt
         with open("job_id.txt", "w") as file:
             file.write(str(basleine_id))
-        self.logger.get_log().info("性能测试job_id: {}".format(basleine_id))
+        self.logger.get_log().info("录入最新baseline数据的job_id: {}".format(basleine_id))
 
         # 插入layer_case
         for title, perf_dict in data_dict.items():
