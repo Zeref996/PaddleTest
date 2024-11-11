@@ -108,6 +108,10 @@ class TestingReporter(object):
 
 if __name__ == "__main__":
     reporter = TestingReporter(date_interval=["2024-11-05", "2024-11-07"])
+    # 打印出相对失败case信息
+    relative_fail_dict, absolute_fail_dict = reporter.get_fail_case_info()
+    print(f"relative_fail_dict:{relative_fail_dict}")
+    # 打印出commit定位结果
     res_dict = reporter.pisector_user()
     print("test end")
     print(f"res_dict:{res_dict}")
