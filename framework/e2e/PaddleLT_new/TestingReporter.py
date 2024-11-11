@@ -27,7 +27,7 @@ class TestingReporter(object):
         self.pwd = os.getcwd()
 
         self.storage = "./apibm_config.yml"
-        self.storage = "/paddle/baidu/paddle/PTSTools/Uploader/apibm_config.yml"
+        # self.storage = "/paddle/baidu/paddle/PTSTools/Uploader/apibm_config.yml"
         self.task_list = task_list
         self.date_interval = date_interval
         self.logger = Logger("PLTReporter")
