@@ -335,6 +335,8 @@ def sublayer_perf_ratio_gen(compare_dict, compare_list):
     for layer_name, perf_dict in compare_dict.items():
         for compare in compare_list:
             if compare["baseline"] == "ground_truth":
+                if perf_dict[compare["latest"] + "^" + "compare"] == "None":
+                    continue
                 ratio_dict[compare["latest"] + "^" + "compare"]["add_ratio"] = (
                     ratio_dict[compare["latest"] + "^" + "compare"]["add_ratio"]
                     + float(perf_dict[compare["latest"] + "^" + "compare"].strip("%")) / 100
@@ -342,6 +344,8 @@ def sublayer_perf_ratio_gen(compare_dict, compare_list):
                 ratio_dict[compare["latest"] + "^" + "compare"]["num_count"] += 1
 
             else:
+                if perf_dict[compare["latest"] + "^" + compare["baseline"] + "^" + "compare"] == "None":
+                    continue
                 ratio_dict[compare["latest"] + "^" + compare["baseline"] + "^" + "compare"]["add_ratio"] = (
                     ratio_dict[compare["latest"] + "^" + compare["baseline"] + "^" + "compare"]["add_ratio"]
                     + float(perf_dict[compare["latest"] + "^" + compare["baseline"] + "^" + "compare"].strip("%")) / 100
