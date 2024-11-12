@@ -23,7 +23,7 @@ class BinarySearch(object):
     性能/精度通用二分定位工具
     """
 
-    def __init__(self, good_commit, bad_commit, layerfile, testing, perf_decay=None, test_obj=LayerTest):
+    def __init__(self, good_commit, bad_commit, layerfile, testing, loop_num=1, perf_decay=None, test_obj=LayerTest):
         """
         初始化
         good_commit: pass的commit
@@ -53,10 +53,17 @@ class BinarySearch(object):
         self.layerfile = layerfile
         self.title = self.layerfile.replace(".py", "").replace("/", "^").replace(".", "^")
         self.testing = testing
+        self.loop_num = loop_num
         self.perf_decay = perf_decay
         self.test_obj = test_obj
         self.py_cmd = os.environ.get("python_ver")
         self.testing_mode = os.environ.get("TESTING_MODE")
+        if self.testing_mode == "precision":
+            self.bs_debug = self._precision_debug
+        elif self.testing_mode == "precision":
+            self.bs_debug = self._performance_debug
+        else:
+            raise ValueError("TESTING_MODE must be either precision or performance")
         self.device_place_id = 0
         self.timeout = 300
 
@@ -164,14 +171,18 @@ class BinarySearch(object):
 
         if os.path.exists(f"{self.title}.py"):
             os.system(f"rm {self.title}.py")
-        exit_code = os.system(
-            f"cp -r PaddleLT.py {self.title}.py && "
-            f"{self.py_cmd} -m pytest {self.title}.py --title={self.title} "
-            f"--layerfile={self.layerfile} --testing={self.testing} "
-            f"--device_place_id={self.device_place_id} --timeout={self.timeout}"
-        )
 
-        if exit_code > 0:
+        exit_code_all = 0
+        for step in range(self.loop_num):
+            exit_code = os.system(
+                f"cp -r PaddleLT.py {self.title}.py && "
+                f"{self.py_cmd} -m pytest {self.title}.py --title={self.title} "
+                f"--layerfile={self.layerfile} --testing={self.testing} "
+                f"--device_place_id={self.device_place_id} --timeout={self.timeout}"
+            )
+            exit_code_all += exit_code
+
+        if exit_code_all > 0:
             self.logger.get_log().info(f"{self.testing_mode}执行失败commit: {commit_id}")
             return False
         else:
@@ -180,7 +191,7 @@ class BinarySearch(object):
 
     def _performance_debug(self, commit_id):
         """
-        精度debug
+        性能debug
         """
         res_dict, exc = self.test_obj(title=self.title, layerfile=self.layerfile, testing=self.testing)._perf_case_run()
         latest = res_dict[self.perf_decay[0]]
@@ -214,7 +225,7 @@ class BinarySearch(object):
 
             self._install_paddle(commit)
 
-            if eval(f"self._{self.testing_mode}_debug")(commit):
+            if self.bs_debug(commit):
                 self.logger.get_log().info("the commit {} is success".format(commit))
                 self.logger.get_log().info("mid value:{}".format(mid))
                 selected_commits = commits[: mid + 1]
@@ -247,16 +258,20 @@ class BinarySearch(object):
 
         # 开始复验
         bool_final_res = 0
+        bool_final_res_list = []
         bool_check_res = 0
+        bool_check_res_list = []
         loop_num = 5
         self._install_paddle(final_commit)
         for i in range(loop_num):
             bool_res_0 = self._precision_debug(final_commit)
             bool_final_res += int(bool_res_0)
+            bool_final_res_list.append(bool_res_0)
         self._install_paddle(check_commit)
         for i in range(loop_num):
             bool_res_1 = self._precision_debug(check_commit)
             bool_check_res += int(bool_res_1)
+            bool_check_res_list.append(bool_res_1)
 
         if bool_final_res == 0 and bool_check_res == loop_num and check_commit == check_commit_origin:
             check_info = "复验流程通过, 定位到的commit就是最终结果。"
@@ -267,16 +282,19 @@ class BinarySearch(object):
         else:
             check_info = "复验流程未通过, 该case存在偶现报错, 需要手动排查。"
             self.logger.get_log().info(check_info)
+            self.logger.get_log().info(f"预期报错commit经过{loop_num}次运行复验结果: {bool_final_res_list}")
+            self.logger.get_log().info(f"报错前一个commit经过{loop_num}次运行复验结果: {bool_check_res_list}")
 
         return final_commit, commit_list, commit_list_origin, check_info
 
 
 if __name__ == "__main__":
     bs = BinarySearch(
-        good_commit="651e66ba06f3ae26c3cf649f83a9a54b486ce75d",
-        bad_commit="5ad596c983e6f6626a6d879b17834d15664946bc",
-        layerfile="layercase/sublayer1000/Det_cases/gfl_gfl_r101vd_fpn_mstrain_2x_coco/SIR_145.py",
+        good_commit="2e963d2bd2ca03626bb46cccbd0119b8873523a6",
+        bad_commit="c4a91627a61a5a723850857600eed15dfde08a62",
+        layerfile="layercase/sublayer1000/Clas_cases/Twins_alt_gvt_base/SIR_136.py",
         testing="yaml/dy^dy2stcinn_train_inputspec.yml",
+        loop_num=10,
         perf_decay=None,  # ["dy2st_eval_cinn_perf", 0.042814, -0.3]
         test_obj=LayerTest,
     )
