@@ -43,6 +43,20 @@ class TestingReporter(object):
         xlsx_save(relative_fail_dict, "./relative_fail_dict.xlsx")
         return relative_fail_dict, absolute_fail_dict
 
+    def get_fail_case_num(self):
+        """
+        获取失败case信息
+        """
+        layer_db = LayerBenchmarkDB(storage=self.storage)
+        relative_fail_dict, absolute_fail_dict = layer_db.get_precision_fail_case_dict(
+            task_list=self.task_list, date_interval=self.date_interval
+        )
+
+        absolute_fail_num_dict = {}
+        for task, value_dict in absolute_fail_dict.items():
+            absolute_fail_num_dict[task] = len(value_dict["absolute_fail_list"])
+        return absolute_fail_num_dict
+
     def binary_search(self, loop_num=1):
         """
         使用二分工具
@@ -130,6 +144,9 @@ if __name__ == "__main__":
     # 打印出相对失败case信息
     relative_fail_dict, absolute_fail_dict = reporter.get_fail_case_info()
     print(f"relative_fail_dict:{relative_fail_dict}")
+    absolute_fail_num_dict = reporter.get_fail_case_num()
+    print(f"absolute_fail_num_dict:{absolute_fail_num_dict}")
+    # exit(0)
     # 打印出commit定位结果
     res_dict = reporter.binary_search(loop_num=10)
     print("test end")

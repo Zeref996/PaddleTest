@@ -55,7 +55,7 @@ yaml/CI_dy^dy2stcinn_train^dy2stcinn_eval_inputspec.yml:
   - layercase/sublayer1000/Det_cases/ppyoloe_ppyoloe_crn_s_400e_coco/SIR_181.py
   - layercase/sublayer1000/Det_cases/smalldet_ppyoloe_plus_sod_crn_l_80e_coco/SIR_177.py
   - layercase/sublayer1000/Det_cases/ppyoloe_ppyoloe_plus_crn_m_80e_coco/SIR_190.py
-  # - layercase/sublayer1000/Clas_cases/LeViT_LeViT_128/SIR_12.py
+  - layercase/sublayer1000/Clas_cases/LeViT_LeViT_128/SIR_12.py  # 超时200秒
   - layercase/sublayer1000/Seg_cases/enet_enet_cityscapes_1024x512_80k/SIR_40.py # 55分钟机器偶现报错
 
 yaml/CI_dy^dy2stcinn_train_inputspec.yml:
