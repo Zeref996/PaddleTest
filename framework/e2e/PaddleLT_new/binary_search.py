@@ -41,6 +41,8 @@ class BinarySearch(object):
                 "wget -q https://xly-devops.bj.bcebos.com/PaddleTest/Paddle/Paddle-develop.tar.gz \
                 && tar -xzf Paddle-develop.tar.gz"
             )
+        else:
+            os.system("cd Paddle-develop && git pull")
 
         self.good_commit = good_commit
         self.bad_commit = bad_commit
@@ -291,10 +293,10 @@ class BinarySearch(object):
 if __name__ == "__main__":
     bs = BinarySearch(
         good_commit="2e963d2bd2ca03626bb46cccbd0119b8873523a6",
-        bad_commit="c4a91627a61a5a723850857600eed15dfde08a62",
-        layerfile="layercase/sublayer1000/Clas_cases/Twins_alt_gvt_base/SIR_136.py",
+        bad_commit="651e66ba06f3ae26c3cf649f83a9a54b486ce75d",
+        layerfile="layercase/sublayer1000/Clas_cases/EfficientNet_EfficientNetB0/SIR_140.py",
         testing="yaml/dy^dy2stcinn_train_inputspec.yml",
-        loop_num=10,
+        loop_num=1,
         perf_decay=None,  # ["dy2st_eval_cinn_perf", 0.042814, -0.3]
         test_obj=LayerTest,
     )

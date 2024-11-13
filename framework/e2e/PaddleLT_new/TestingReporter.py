@@ -10,7 +10,7 @@ import os
 from pltools.res_save import xlsx_save
 from pltools.logger import Logger
 from db.layer_db import LayerBenchmarkDB
-from db.info_map import precision_md5, performance_md5
+from db.info_map import precision_md5, precision_flags, performance_md5
 
 from binary_search import BinarySearch
 
@@ -57,6 +57,25 @@ class TestingReporter(object):
             absolute_fail_num_dict[task] = len(value_dict["absolute_fail_list"])
         return absolute_fail_num_dict
 
+    def _set_flags(self, task):
+        """
+        设定环境变量
+        """
+        task_flags_dict = precision_flags[task]
+        for key, value in task_flags_dict.items():
+            os.environ[key] = value
+            self.logger.get_log().info(f"_set_flags设定环境变量: {key}={value}")
+
+    def _unset_flags(self, task):
+        """
+        取消环境变量
+        """
+        task_flags_dict = precision_flags[task]
+        for key, value in task_flags_dict.items():
+            if key in os.environ:
+                self.logger.get_log().info(f"_unset_flags取消环境变量: {key}={os.environ[key]}")
+                del os.environ[key]
+
     def binary_search(self, loop_num=1):
         """
         使用二分工具
@@ -68,6 +87,8 @@ class TestingReporter(object):
             relative_fail_info_dict[task] = value_dict
             relative_fail_info_dict[task]["relative_fail_info"] = {}
             res_dict[task] = {}
+            # 设定环境变量
+            self._set_flags(task=task)
             if len(value_dict["relative_fail_list"]) == 0:
                 continue
             else:
@@ -97,6 +118,8 @@ class TestingReporter(object):
                             }
                         }
                     )
+            # 取消环境变量
+            self._unset_flags(task=task)
 
         xlsx_save(relative_fail_info_dict, "./relative_fail_info_dict.xlsx")
         return res_dict
@@ -148,6 +171,6 @@ if __name__ == "__main__":
     print(f"absolute_fail_num_dict:{absolute_fail_num_dict}")
     # exit(0)
     # 打印出commit定位结果
-    res_dict = reporter.binary_search(loop_num=10)
-    print("test end")
+    res_dict = reporter.binary_search(loop_num=1)
+    print("binary search end")
     print(f"res_dict:{res_dict}")
