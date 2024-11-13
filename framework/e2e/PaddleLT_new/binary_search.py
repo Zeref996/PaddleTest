@@ -51,6 +51,7 @@ class BinarySearch(object):
             "Develop-GpuSome-LinuxCentos-Gcc82-Cuda118-Cudnn86-Trt85-Py310-CINN-Compile/{}/paddle"
             "paddle_gpu-0.0.0-cp310-cp310-linux_x86_64.whl"
         )
+        self.whl = "paddlepaddle_gpu-0.0.0-cp310-cp310-linux_x86_64.whl"
 
         self.layerfile = layerfile
         self.title = self.layerfile.replace(".py", "").replace("/", "^").replace(".", "^")
@@ -156,7 +157,8 @@ class BinarySearch(object):
 
         whl_link = self.whl_link_template.replace("{}", commit_id)
 
-        exit_code = os.system(f"{self.py_cmd} -m pip install {whl_link}")
+        # exit_code = os.system(f"{self.py_cmd} -m pip install {whl_link}")
+        exit_code = os.system(f"rm -rf {self.whl} && wget -q {whl_link} && {self.py_cmd} -m pip install {self.whl}")
         self._status_print(exit_code=exit_code, status_str="install paddlepaddle-gpu")
         self.logger.get_log().info("commit {} install done".format(commit_id))
         return 0
@@ -242,6 +244,17 @@ class BinarySearch(object):
         """
         用户运行
         """
+        # 初始检查
+        self._install_paddle(self.good_commit)
+        bool_res_init_good_commit = self._precision_debug(self.good_commit)  # 应该为True
+        self._install_paddle(self.bad_commit)
+        bool_res_init_bad_commit = self._precision_debug(self.bad_commit)  # 应该为False
+
+        if not bool_res_init_good_commit or bool_res_init_bad_commit:
+            check_info = f"初始commit有误, good_commit为{bool_res_init_good_commit}, bad_commit为{bool_res_init_bad_commit}"
+            self.logger.get_log().info(check_info)
+            return "none", "none", "none", check_info
+
         commit_list_origin = self._get_commits()
         self.logger.get_log().info(f"original commit list is: {commit_list_origin}")
         save_pickle(data=commit_list_origin, filename="commit_list_origin.pickle")
