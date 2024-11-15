@@ -36,6 +36,7 @@ class TestingReporter(object):
         if "," in date_interval:
             date_interval = date_interval.split(",")
         self.date_interval = date_interval
+        self.logger.get_log().info(f"self.date_interval: {self.date_interval}")
 
     def get_fail_case_info(self):
         """
@@ -174,7 +175,7 @@ if __name__ == "__main__":
     parser.add_argument("--date_interval", type=str, default="None", help="时间区间选择")
     parser.add_argument("--loop_num", type=int, default=1, help="循环验证次数")
     args = parser.parse_args()
-    reporter = TestingReporter(date_interval=args.date_interval)  # date_interval="2024-11-05,2024-11-07"
+    reporter = TestingReporter(date_interval=args.date_interval)  # date_interval="2024-11-13,2024-11-14"
     # 打印出相对失败case信息
     relative_fail_dict, absolute_fail_dict = reporter.get_fail_case_info()
     print(f"relative_fail_dict:{relative_fail_dict}")
