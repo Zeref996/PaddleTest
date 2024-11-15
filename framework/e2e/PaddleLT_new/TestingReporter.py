@@ -175,7 +175,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date_interval", type=str, default="None", help="时间区间选择")
-    parser.add_argument("--loop_num", type=int, default=1, help="时间区间选择")
+    parser.add_argument("--loop_num", type=int, default=1, help="循环验证次数")
     args = parser.parse_args()
     reporter = TestingReporter(date_interval=args.date_interval)  # date_interval=["2024-11-05", "2024-11-07"]
     # 打印出相对失败case信息
