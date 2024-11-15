@@ -97,8 +97,10 @@ class TestingReporter(object):
             # 设定环境变量
             self._set_flags(task=task)
             if len(value_dict["fail_list"]) == 0:
+                self.logger.get_log().info(f"{task}任务无报错case, 无需进行二分定位")
                 continue
             else:
+                self.logger.get_log().info(f"{task}任务有报错case, 准备进行二分定位")
                 baseline_commit = value_dict["baseline_commit"]
                 latest_commit = value_dict["latest_commit"]
                 testing = value_dict["testing"]
