@@ -5,7 +5,7 @@ import PaddleOCR.ppocr.modeling.backbones as backbones
 
 def LayerCase():
     """模型库中间态"""
-    model = backbones.build_backbone(config={"name": "MTB"}, model_type="cls")
+    model = backbones.build_backbone(config={"name": "MTB", "cnn_num": 2, "in_channels": 3}, model_type="cls")
     return model
 
 
