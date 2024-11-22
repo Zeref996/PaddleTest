@@ -20,27 +20,33 @@ def LayerCase():
 
 
 def create_inputspec():
-    inputspec = [[
-        paddle.static.InputSpec(shape=(-1, 3, 224, 224), dtype=paddle.float32, stop_gradient=False),
-        paddle.static.InputSpec(shape=(1,), dtype=paddle.float32, stop_gradient=False),
-        paddle.static.InputSpec(shape=(1,), dtype=paddle.float32, stop_gradient=False),
-    ]]
+    inputspec = [
+        [
+            paddle.static.InputSpec(shape=(-1, 3, 224, 224), dtype=paddle.float32, stop_gradient=False),
+            paddle.static.InputSpec(shape=(1,), dtype=paddle.float32, stop_gradient=False),
+            paddle.static.InputSpec(shape=(1,), dtype=paddle.float32, stop_gradient=False),
+        ]
+    ]
     return inputspec
 
 
 def create_tensor_inputs():
-    inputs = [[
-        paddle.rand(shape=[1, 3, 224, 224], dtype=paddle.float32),
-        paddle.rand(shape=[1], dtype=paddle.float32),
-        paddle.rand(shape=[1], dtype=paddle.float32),
-    ]]
+    inputs = [
+        [
+            paddle.rand(shape=[1, 3, 224, 224], dtype=paddle.float32),
+            paddle.rand(shape=[1], dtype=paddle.float32),
+            paddle.rand(shape=[1], dtype=paddle.float32),
+        ]
+    ]
     return inputs
 
 
 def create_numpy_inputs():
-    inputs = [[
-        np.random.random(size=[1, 3, 224, 224]).astype("float32"),
-        np.random.random(size=[1]).astype("float32"),
-        np.random.random(size=[1]).astype("float32"),
-    ]]
+    inputs = [
+        [
+            np.random.random(size=[1, 3, 224, 224]).astype("float32"),
+            np.random.random(size=[1]).astype("float32"),
+            np.random.random(size=[1]).astype("float32"),
+        ]
+    ]
     return inputs
