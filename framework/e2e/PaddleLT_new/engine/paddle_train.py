@@ -119,7 +119,8 @@ class LayerTrain(object):
         """记录list[inputs...]中的input.grad并生成list[input.grad...]"""
         data_grad = []
         for i in data:
-            data_grad.append(i.grad)
+            if isinstance(i, paddle.Tensor):
+                data_grad.append(i.grad)
         return data_grad
 
     def dy_train(self):
@@ -138,6 +139,7 @@ class LayerTrain(object):
             opt = optimizer.get_opt(net=net)
 
         for epoch in range(self.step):
+            print("train engine data is: ", data)
             logit = net(*data)
             # 构建loss用于训练
             dy_loss = loss.get_loss(logit)

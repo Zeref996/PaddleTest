@@ -15,9 +15,12 @@ if os.environ.get("FRAMEWORK") == "paddle":
     import layerApicase
     import layercase
 
-    if os.environ.get("USE_PADDLE_MODEL", "None") == "PaddleOCR":
-        import layerModelcase
-        import PaddleOCR
+    # if os.environ.get("USE_PADDLE_MODEL", "None") == "PaddleOCR":
+    #     import layerModelcase
+    #     import PaddleOCR
+    # elif os.environ.get("USE_PADDLE_MODEL", "None") == "PaddleNLP":
+    #     import layerModelcase
+    #     import paddlenlp
 elif os.environ.get("FRAMEWORK") == "torch":
     import torch
     import layerTorchcase
@@ -40,16 +43,33 @@ class BuildData(object):
             data = []
             # for i in eval(dataname):
             for i in getattr(self.layer_module, "create_numpy_inputs")():
-                if os.environ.get("FRAMEWORK") == "paddle":
-                    if i.dtype == np.int64 or i.dtype == np.int32:
-                        data.append(paddle.to_tensor(i, stop_gradient=True))
-                    else:
-                        data.append(paddle.to_tensor(i, stop_gradient=False))
-                elif os.environ.get("FRAMEWORK") == "torch":
-                    if i.dtype == np.int64 or i.dtype == np.int32:
-                        data.append(torch.tensor(i, requires_grad=False))
-                    else:
-                        data.append(torch.tensor(i, requires_grad=True))
+                if isinstance(i, (tuple, list)):  # 为了适配list输入的模型子图
+                    tmp = []
+                    for j in i:
+                        if os.environ.get("FRAMEWORK") == "paddle":
+                            if j.dtype == np.int64 or j.dtype == np.int32:
+                                tmp.append(paddle.to_tensor(j, stop_gradient=True))
+                            else:
+                                tmp.append(paddle.to_tensor(j, stop_gradient=False))
+                        elif os.environ.get("FRAMEWORK") == "torch":
+                            if j.dtype == np.int64 or j.dtype == np.int32:
+                                tmp.append(torch.tensor(j, requires_grad=False))
+                            else:
+                                tmp.append(torch.tensor(j, requires_grad=True))
+                    data.append(tmp)
+                elif isinstance(i, np.ndarray):
+                    if os.environ.get("FRAMEWORK") == "paddle":
+                        if i.dtype == np.int64 or i.dtype == np.int32:
+                            data.append(paddle.to_tensor(i, stop_gradient=True))
+                        else:
+                            data.append(paddle.to_tensor(i, stop_gradient=False))
+                    elif os.environ.get("FRAMEWORK") == "torch":
+                        if i.dtype == np.int64 or i.dtype == np.int32:
+                            data.append(torch.tensor(i, requires_grad=False))
+                        else:
+                            data.append(torch.tensor(i, requires_grad=True))
+                else:
+                    data.append(i)
         else:
             data = self.get_single_tensor()
 
