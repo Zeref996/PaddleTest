@@ -12,4 +12,4 @@ for py_file in py_files:
     # 获取文件名（不含扩展名）
     module_name = os.path.basename(py_file)[:-3]
     # 导入模块
-    __import__("layerNLPcase.debug.case_bug.transformers.reformer." + module_name, globals(), locals(), [])
+    __import__("layerOCRcase.debug.case_bug.backbones." + module_name, globals(), locals(), [])
