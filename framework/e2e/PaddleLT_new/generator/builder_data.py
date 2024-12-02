@@ -69,10 +69,9 @@ class BuildData(object):
                         else:
                             data.append(torch.tensor(i, requires_grad=True))
                 else:
-                    data.append(i)
+                    data.append(paddle.to_tensor(i, stop_gradient=False))
         else:
             data = self.get_single_tensor()
-
         return data
 
     def get_single_tensor(self):
