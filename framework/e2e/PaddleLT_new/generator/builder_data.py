@@ -68,8 +68,12 @@ class BuildData(object):
                             data.append(torch.tensor(i, requires_grad=False))
                         else:
                             data.append(torch.tensor(i, requires_grad=True))
-                else:
+                elif isinstance(i, float):
                     data.append(paddle.to_tensor(i, stop_gradient=False))
+                elif isinstance(i, int):
+                    data.append(paddle.to_tensor(i, stop_gradient=True))
+                else:
+                    data.append(i)
         else:
             data = self.get_single_tensor()
         return data
