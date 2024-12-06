@@ -19,6 +19,8 @@ if os.environ.get("FRAMEWORK") == "paddle":
     elif os.environ.get("USE_PADDLE_MODEL", "None") == "PaddleNLP":
         import layerNLPcase
         import paddlenlp
+
+        os.system("cd /root/.paddlenlp && rm -rf models")
 elif os.environ.get("FRAMEWORK") == "torch":
     import torch
     import layerTorchcase
