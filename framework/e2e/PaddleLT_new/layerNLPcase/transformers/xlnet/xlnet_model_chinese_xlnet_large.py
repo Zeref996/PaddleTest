@@ -8,6 +8,7 @@ def LayerCase():
     model = XLNetModel.from_pretrained('chinese-xlnet-large')
     return model
 
+
 def create_inputspec():
     inputspec = (
         paddle.static.InputSpec(shape=(-1, 13), dtype=paddle.float32, stop_gradient=False),
