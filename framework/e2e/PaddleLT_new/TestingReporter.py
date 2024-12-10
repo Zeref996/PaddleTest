@@ -174,7 +174,7 @@ class TestingReporter(object):
 
     def _bs_upload(self):
         """二分结果上传bos"""
-        bos_path = f"PaddleLT/PaddleLTBenchmark/binary_search/build_{self.AGILE_PIPELINE_BUILD_ID}"
+        bos_path = f"PaddleLT/binary_search/build_{self.AGILE_PIPELINE_BUILD_ID}"
         excel_file = "binary_search_result.xlsx"
         if os.path.exists(excel_file):
             UploadBos().upload_to_bos(bos_path="paddle-qa/{}".format(bos_path), file_path=excel_file)
@@ -200,5 +200,5 @@ if __name__ == "__main__":
     # 打印出commit定位结果
     res_dict = reporter.binary_search(fail_dict=relative_fail_dict, loop_num=args.loop_num)
     reporter._bs_upload()
-    print("binary search end")
-    print(f"res_dict:{res_dict}")
+    # print("binary search end")
+    # print(f"res_dict:{res_dict}")

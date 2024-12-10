@@ -15,6 +15,8 @@ precision_md5 = {
     "paddlelt_train_api_dy2stcinn_inputspec": "76017cfeb6074f7188253df556e9fef9",
     "paddlelt_train_prim_inputspec": "33f3b8b4505041abe5ae221f2abd8932",
     "paddlelt_train_pir_infersymbolic_inputspec": "07da2ef04135d7ec5d42987705204e1f",
+    "paddlelt_train_nlp_dy2stcinn_inputspec": "65e6644742b2653427cdaf51035e5ef6",
+    "paddlelt_train_ocr_dy2stcinn_inputspec": "d3cd6b167556057f25568d93e0592529",
 }
 
 precision_flags = {
@@ -73,6 +75,20 @@ precision_flags = {
         "FLAGS_enable_pir_in_executor": "1",
         "MIN_GRAPH_SIZE": "0",
         "FLAGS_check_infer_symbolic": "1",
+        "FLAGS_prim_forward_blacklist": "pd_op.dropout",
+    },
+    "paddlelt_train_nlp_dy2stcinn_inputspec": {
+        "MIN_GRAPH_SIZE": "0",
+        "FLAGS_prim_all": "true",
+        "FLAGS_use_cinn": "1",
+        "FLAGS_prim_enable_dynamic": "true",
+        "FLAGS_prim_forward_blacklist": "pd_op.dropout",
+    },
+    "paddlelt_train_ocr_dy2stcinn_inputspec": {
+        "MIN_GRAPH_SIZE": "0",
+        "FLAGS_prim_all": "true",
+        "FLAGS_use_cinn": "1",
+        "FLAGS_prim_enable_dynamic": "true",
         "FLAGS_prim_forward_blacklist": "pd_op.dropout",
     },
 }
