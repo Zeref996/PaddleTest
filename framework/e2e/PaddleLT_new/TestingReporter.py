@@ -191,11 +191,11 @@ if __name__ == "__main__":
     reporter = TestingReporter(date_interval=args.date_interval)  # date_interval=2024-11-13,2024-11-14
     # 打印出相对失败case信息
     relative_fail_dict, absolute_fail_dict = reporter.get_fail_case_info()
-    print(f"relative_fail_dict:{relative_fail_dict}")
+    # print(f"relative_fail_dict:{relative_fail_dict}")
     relative_fail_num_dict = reporter.get_fail_case_num(fail_dict=relative_fail_dict)
-    print(f"relative_fail_num_dict:{relative_fail_num_dict}")
+    # print(f"relative_fail_num_dict:{relative_fail_num_dict}")
     absolute_fail_num_dict = reporter.get_fail_case_num(fail_dict=absolute_fail_dict)
-    print(f"absolute_fail_num_dict:{absolute_fail_num_dict}")
+    # print(f"absolute_fail_num_dict:{absolute_fail_num_dict}")
     # exit(0)
     # 打印出commit定位结果
     res_dict = reporter.binary_search(fail_dict=relative_fail_dict, loop_num=args.loop_num)
