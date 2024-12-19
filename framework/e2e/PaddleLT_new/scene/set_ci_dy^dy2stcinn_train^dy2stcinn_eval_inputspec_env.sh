@@ -23,16 +23,11 @@ export PLT_GT_DOWNLOAD_URL=None  # plt_gt的下载url, https://paddle-qa.bj.bceb
 
 export PLT_BM_DB=non-db
 
-export FLAGS_prim_forward_blacklist=pd_op.dropout
-export FLAGS_enable_pir_api=1
-export FLAGS_prim_enable_dynamic=true
+export MIN_GRAPH_SIZE=0
 export FLAGS_prim_all=true
-export FLAGS_cinn_new_group_scheduler=1
-export FLAGS_group_schedule_tiling_first=1
-export FLAGS_cinn_bucket_compile=True
-export FLAGS_cinn_compile_with_nvrtc=True
-export FLAGS_nvrtc_compile_to_cubin=True
-export FLAGS_support_reduce_stride_read=1
+export FLAGS_use_cinn=1
+export FLAGS_prim_enable_dynamic=true
+export FLAGS_prim_forward_blacklist=pd_op.dropout
 
 echo "wheel_url is: ${wheel_url}"
 echo "python_ver is: ${python_ver}"
