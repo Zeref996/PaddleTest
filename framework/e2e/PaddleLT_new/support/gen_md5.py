@@ -1,6 +1,6 @@
 #!/bin/env python
 # -*- coding: utf-8 -*-
-# @author DDDivano
+# @author Zeref996
 # encoding=utf-8 vi:ts=4:sw=4:expandtab:ft=python
 """
 md5获取
