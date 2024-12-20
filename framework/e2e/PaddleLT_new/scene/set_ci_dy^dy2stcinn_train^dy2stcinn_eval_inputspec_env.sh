@@ -26,7 +26,7 @@ export PLT_GT_DOWNLOAD_URL=None  # plt_gt的下载url, https://paddle-qa.bj.bceb
 
 # 精度结果入库
 export PLT_BM_MODE="${PLT_BM_MODE:-baseline}"
-export PLT_BM_DB=non-db
+export PLT_BM_DB=insert
 
 export MIN_GRAPH_SIZE=0
 export FLAGS_prim_all=true
