@@ -199,6 +199,8 @@ def torch_compare(result, expect, res_name, exp_name, logger, delta=1e-10, rtol=
         if isinstance(result, eval("paddle.Tensor")):
             result = result.numpy()
         if torch.is_tensor(expect):
+            # expect = expect.numpy()
+            expect = expect.cpu()
             expect = expect.detach().numpy()
         # res = np.allclose(result, expect, atol=delta, rtol=rtol, equal_nan=True)
         # # 出错打印错误数据

@@ -54,8 +54,10 @@ class BuildData(object):
                                 tmp.append(paddle.to_tensor(j, stop_gradient=False))
                         elif framework == "torch":
                             if j.dtype == np.int64 or j.dtype == np.int32:
+                                # tmp.append(torch.tensor(j, requires_grad=False, device=torch.device('cuda:0')))
                                 tmp.append(torch.tensor(j, requires_grad=False))
                             else:
+                                # tmp.append(torch.tensor(j, requires_grad=True, device=torch.device('cuda:0')))
                                 tmp.append(torch.tensor(j, requires_grad=True))
                     data.append(tmp)
                 elif isinstance(i, np.ndarray):
@@ -66,8 +68,10 @@ class BuildData(object):
                             data.append(paddle.to_tensor(i, stop_gradient=False))
                     elif framework == "torch":
                         if i.dtype == np.int64 or i.dtype == np.int32:
+                            # data.append(torch.tensor(i, requires_grad=False, device=torch.device('cuda:0')))
                             data.append(torch.tensor(i, requires_grad=False))
                         else:
+                            # data.append(torch.tensor(i, requires_grad=True, device=torch.device('cuda:0')))
                             data.append(torch.tensor(i, requires_grad=True))
                 elif isinstance(i, float):
                     data.append(paddle.to_tensor(i, stop_gradient=False))

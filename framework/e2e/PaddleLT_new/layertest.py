@@ -110,7 +110,7 @@ class LayerTest(object):
                 res = self._single_run(
                     testing=testing,
                     layerfile=self.layerfile,
-                    device_place_id=self.device_place_id,
+                    device_place_id=self.testings.get(testing).get("device_place_id", self.device_place_id),
                     upstream_net=net,
                     framework=self.testings.get(testing).get("framework", "paddle"),
                     orderdict_usage=self.testings.get(testing).get("orderdict_usage", "None"),
@@ -257,8 +257,10 @@ class LayerTest(object):
 
 
 if __name__ == "__main__":
-    # layerfile = "layerApicase/nn_sublayer/Conv2D_0_class.py"
+    # layerfile = "layerApicase/math_extreme_size/abs_giant_size_func.py"
     # testing = "yaml/dy_eval^torch_dy_eval.yml"
+    # # testing = "yaml/dy_eval.yml"
+    # # testing = "yaml/dy_train.yml"
     # single_test = LayerTest(title=layerfile, layerfile=layerfile, testing=testing)
     # single_test._case_run()
     # exit(0)

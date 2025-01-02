@@ -2,11 +2,13 @@ testings:
   torch_dy_eval:
     framework: "torch"
     orderdict_usage: "save"
+    device_place_id: "1"
     model_dtype: "float32"
 
   dy_eval:
     framework: "paddle"
     orderdict_usage: "load"
+    device_place_id: "0"
     model_dtype: "float32"
 
 compare:

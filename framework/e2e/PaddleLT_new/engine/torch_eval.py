@@ -30,7 +30,11 @@ class TorchLayerEval(object):
         reset(self.seed)
 
         self.device = os.environ.get("PLT_SET_DEVICE")
-        torch.device(f"cuda:{device_place_id}")
+        # torch.device(f"cuda:{device_place_id}")
+        device = torch.device(f"cuda:{device_place_id}")
+        # device = torch.device('cuda:0')
+        # torch.cuda.set_device(device)
+        torch.set_default_device(device)
 
         self.testing = testing
         self.upstream_net = upstream_net
