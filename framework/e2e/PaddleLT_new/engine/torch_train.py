@@ -17,8 +17,10 @@ from generator.builder_loss import BuildLoss
 
 from pltools.logger import Logger
 
+from strategy.ordered_dict import OrderedDictProcess
 
-class LayerTrain(object):
+
+class TorchLayerTrain(object):
     """
     构建Layer训练的通用类
     """
@@ -33,10 +35,11 @@ class LayerTrain(object):
         self.device = os.environ.get("PLT_SET_DEVICE")
         device = torch.device(f"cuda:{device_place_id}")
         torch.set_default_device(device)
-        Logger("LayerTrain.__init__").get_log().info(f"device_place_id is: {device_place_id}")
+        Logger("TorchLayerTrain.__init__").get_log().info(f"device_place_id is: {device_place_id}")
 
         self.testing = testing
         self.upstream_net = upstream_net
+        self.orderdict_usage = orderdict_usage
         self.return_net_instance = self.testing.get("return_net_instance", "False")
         self.model_dtype = self.testing.get("model_dtype")
         # torch.set_default_dtype(self.model_dtype)
@@ -53,7 +56,7 @@ class LayerTrain(object):
     def _net_input(self):
         """get input"""
         reset(self.seed)
-        data = BuildData(layerfile=self.layerfile).get_single_data()
+        data = BuildData(layerfile=self.layerfile).get_single_data(framework="torch")
         return data
 
     def _net_instant(self):
@@ -63,6 +66,8 @@ class LayerTrain(object):
             net = self.upstream_net
         else:
             net = BuildLayer(layerfile=self.layerfile).get_layer()
+        if self.orderdict_usage != "None":
+            net = OrderedDictProcess(net=net, layerfile=self.layerfile, orderdict_usage=self.orderdict_usage).process()
         return net
 
     def _net_optimizer(self):
@@ -107,7 +112,7 @@ class LayerTrain(object):
                 data_grad.append(i.grad)
         return data_grad
 
-    def dy_train(self):
+    def torch_dy_train(self):
         """dygraph train"""
         # data, net, optimizer, loss = self._get_instant()
         data = self._net_input()
@@ -123,15 +128,16 @@ class LayerTrain(object):
             opt = optimizer.get_opt(net=net)
 
         for epoch in range(self.step):
+            print("data is: ", data)
             logit = net(*data)
             # 构建loss用于训练
             dy_loss = loss.get_loss(logit)
             dy_loss.backward()
             if net.parameters():
                 opt.step()
-                opt.clear_grad()
+                opt.zero_grad()
 
-        Logger("dy_train").get_log().info(f"已完成 {epoch} 轮训练")
+        Logger("torch_dy_train").get_log().info(f"已完成 {epoch} 轮训练")
         data_grad = self._get_data_grad(data)
         if self.return_net_instance == "True":
             return {"res": {"logit": logit, "data_grad": data_grad}, "net": net}
@@ -164,7 +170,7 @@ class LayerTrain(object):
     #         dy_loss.backward()
     #         if dp_net.parameters():
     #             opt.step()
-    #             opt.clear_grad()
+    #             opt.zero_grad()
 
     #     Logger("dy_dp_train").get_log().info(f"已完成 {epoch} 轮训练")
     #     data_grad = self._get_data_grad(data)
@@ -192,7 +198,7 @@ class LayerTrain(object):
     #             loss = self.loss.get_loss(logit)
     #             loss.backward()
     #             opt.step()
-    #             opt.clear_grad()
+    #             opt.zero_grad()
     #     return logit
 
     # def dy2st_train(self):
@@ -220,7 +226,7 @@ class LayerTrain(object):
     #         dy_loss.backward()
     #         if st_net.parameters():
     #             opt.step()
-    #             opt.clear_grad()
+    #             opt.zero_grad()
 
     #     Logger("dy2st_train").get_log().info(f"已完成 {epoch} 轮训练")
     #     data_grad = self._get_data_grad(data)
@@ -252,7 +258,7 @@ class LayerTrain(object):
     #         dy_loss.backward()
     #         if st_net.parameters():
     #             opt.step()
-    #             opt.clear_grad()
+    #             opt.zero_grad()
 
     #     Logger("dy2st_train_inputspec").get_log().info(f"已完成 {epoch} 轮训练")
     #     data_grad = self._get_data_grad(data)
@@ -284,7 +290,7 @@ class LayerTrain(object):
     #         dy_loss.backward()
     #         if st_net.parameters():
     #             opt.step()
-    #             opt.clear_grad()
+    #             opt.zero_grad()
 
     #     Logger("dy2st_train_static_inputspec").get_log().info(f"已完成 {epoch} 轮训练")
     #     data_grad = self._get_data_grad(data)
@@ -321,7 +327,7 @@ class LayerTrain(object):
     #         dy_loss.backward()
     #         if cinn_net.parameters():
     #             opt.step()
-    #             opt.clear_grad()
+    #             opt.zero_grad()
 
     #     Logger("dy2st_train_cinn").get_log().info(f"已完成 {epoch} 轮训练")
     #     data_grad = self._get_data_grad(data)
@@ -360,7 +366,7 @@ class LayerTrain(object):
     #         dy_loss.backward()
     #         if cinn_net.parameters():
     #             opt.step()
-    #             opt.clear_grad()
+    #             opt.zero_grad()
 
     #     Logger("dy2st_train_cinn_inputspec").get_log().info(f"已完成 {epoch} 轮训练")
     #     data_grad = self._get_data_grad(data)
@@ -399,7 +405,7 @@ class LayerTrain(object):
     #         dy_loss.backward()
     #         if cinn_net.parameters():
     #             opt.step()
-    #             opt.clear_grad()
+    #             opt.zero_grad()
 
     #     Logger("dy2st_train_cinn_static_inputspec").get_log().info(f"已完成 {epoch} 轮训练")
     #     data_grad = self._get_data_grad(data)

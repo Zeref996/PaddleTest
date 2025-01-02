@@ -7,6 +7,7 @@ engine 查表
 """
 
 from engine.torch_eval import TorchLayerEval
+from engine.torch_train import TorchLayerTrain
 
 # from engine.torch_eval_bm import TorchLayerEvalBM
 
@@ -15,5 +16,6 @@ from engine.torch_eval import TorchLayerEval
 
 torch_engine_map = {
     "torch_dy_eval": TorchLayerEval,
+    "torch_dy_train": TorchLayerTrain,
     # "torch_dy_eval_perf": TorchLayerEvalBM,  # 动态图评估性能
 }

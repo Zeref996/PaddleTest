@@ -69,9 +69,14 @@ class OrderedDictProcess(object):
         """
         pickle_dict = {}
         # print('self.net.state_dict() is: ', self.net.state_dict())
-        for key, value in self.net.state_dict().items():
-            pickle_dict[key] = value.numpy()
-            # print('save pickle_dict[key] is: ', pickle_dict[key])
+        if self.framework == "paddle":
+            for key, value in self.net.state_dict().items():
+                pickle_dict[key] = value.numpy()
+                # print('save pickle_dict[key] is: ', pickle_dict[key])
+        elif self.framework == "torch":
+            for key, value in self.net.state_dict().items():
+                value = value.cpu()
+                pickle_dict[key] = value.detach().numpy()
         save_pickle(pickle_dict, self.path)
         # eval(f"{self.framework}.save")(self.net.state_dict(), self.path)
 
