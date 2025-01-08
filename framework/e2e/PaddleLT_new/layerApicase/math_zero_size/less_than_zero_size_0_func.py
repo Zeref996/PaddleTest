@@ -4,8 +4,7 @@ import paddle
 
 class LayerCase(paddle.nn.Layer):
     """
-    case名称: less_than_0
-    api简介: 逐元素地返回 x<y 的逻辑值，相同位置前者输入小于后者输入则返回True，否则返回False
+    case名称: less_than_zero_size_0_func
     """
 
     def __init__(self):

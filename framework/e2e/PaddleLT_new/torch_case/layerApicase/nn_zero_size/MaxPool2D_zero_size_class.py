@@ -10,7 +10,7 @@ class LayerCase(nn.Module):
 
     def __init__(self):
         super(LayerCase, self).__init__()
-        self.func = nn.MaxPool2D(
+        self.func = nn.MaxPool2d(
                 kernel_size=1,
                 stride=1,
                 padding=0,

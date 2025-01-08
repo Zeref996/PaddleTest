@@ -11,7 +11,7 @@ class LayerCase(nn.Module):
     def __init__(self):
         super(LayerCase, self).__init__()
 
-    def forward(self, x):
+    def forward(self, ):
         """
         forward
         """
