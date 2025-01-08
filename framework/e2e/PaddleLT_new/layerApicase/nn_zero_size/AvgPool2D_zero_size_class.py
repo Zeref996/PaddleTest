@@ -4,15 +4,18 @@ import paddle
 
 class LayerCase(paddle.nn.Layer):
     """
-    case名称: Conv2D_giant_size_class
-    api简介: 2维卷积
+    case名称: AvgPool2D_zero_size_class
     """
 
     def __init__(self):
         super(LayerCase, self).__init__()
-        self.func = paddle.nn.Conv2D(
-            in_channels=0, out_channels=1, kernel_size=1,
-            stride=1, padding=0, dilation=1, groups=1)
+        self.func = paddle.nn.AvgPool2D(
+            kernel_size=1,
+            stride=1,
+            padding=0,
+            ceil_mode=False,
+            exclusive=True,
+        )
 
     def forward(self, data, ):
         """

@@ -5,14 +5,12 @@ import torch.nn as nn
 
 class LayerCase(nn.Module):
     """
-    case名称: Conv2D_giant_size_class
-    api简介: 2维卷积
+    case名称: Dropout_zero_size_class
     """
 
     def __init__(self):
         super(LayerCase, self).__init__()
-        self.func = nn.Conv2d(in_channels=0, out_channels=1, kernel_size=1,
-            stride=1, padding=0, dilation=1, groups=1)
+        self.func = nn.Dropout(p=0.5)
 
     def forward(self, data):
         """

@@ -5,8 +5,7 @@ import torch.nn as nn
 
 class LayerCase(nn.Module):
     """
-    case名称: abs_base
-    api简介: 求绝对值
+    case名称: linalg_cov_size_func
     """
 
     def __init__(self):
@@ -18,7 +17,7 @@ class LayerCase(nn.Module):
         """
         torch.manual_seed(33)
         np.random.seed(33)
-        out = torch.abs(x)
+        out = torch.cov(x)
         return out
 
 
@@ -26,7 +25,7 @@ def create_tensor_inputs():
     """
     PyTorch tensor
     """
-    inputs = (torch.tensor((-1 + 2 * np.random.random([128, 0, 1])).astype(np.float32), dtype=torch.float32, requires_grad=True), )
+    inputs = (torch.tensor((-1 + 2 * np.random.random([3, 0])).astype(np.float32), dtype=torch.float32, requires_grad=True), )
     return inputs
 
 
@@ -34,6 +33,5 @@ def create_numpy_inputs():
     """
     numpy array
     """
-    # 生成一个形状为[1024, 256, 128, 100, 2]的随机numpy数组，数据范围在[-1, 1)
-    inputs = ((-1 + 2 * np.random.random([128, 0, 1])).astype('float32'),)
+    inputs = ((-1 + 2 * np.random.random([3, 0])).astype('float32'),)
     return inputs
