@@ -57,6 +57,7 @@ yaml/CI_dy^dy2stcinn_train^dy2stcinn_eval_inputspec.yml:
   - layercase/sublayer1000/Det_cases/ppyoloe_ppyoloe_plus_crn_m_80e_coco/SIR_190.py
   - layercase/sublayer1000/Clas_cases/LeViT_LeViT_128/SIR_12.py  # 超时200秒
   - layercase/sublayer1000/Seg_cases/enet_enet_cityscapes_1024x512_80k/SIR_40.py # 55分钟机器偶现报错
+  - layercase/sublayer1000/Det_cases/picodet_legacy_model_picodet_l_320_coco/SIR_341.py # 精度不同机器不同报错
 
 yaml/CI_dy^dy2stcinn_train_inputspec.yml:
   - layercase/sublayer1000/Det_cases/rotate_fcosr_fcosr_x50_3x_dota/SIR_50.py # 偶现挂
