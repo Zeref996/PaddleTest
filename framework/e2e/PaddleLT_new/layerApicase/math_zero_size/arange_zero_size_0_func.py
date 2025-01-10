@@ -1,11 +1,10 @@
 import numpy as np
-import torch
-import torch.nn as nn
+import paddle
 
 
-class LayerCase(nn.Module):
+class LayerCase(paddle.nn.Layer):
     """
-    case名称: linspace_zero_size_func
+    case名称: arange_zero_size_func
     """
 
     def __init__(self):
@@ -15,19 +14,26 @@ class LayerCase(nn.Module):
         """
         forward
         """
-        torch.manual_seed(33)
+
+        paddle.seed(33)
         np.random.seed(33)
-        out = torch.linspace(
-            start=0,
-            end=0,
-            steps=0,
+        out = paddle.arange(
+            start=0.,
+            end=0.,
+            step=0.,
+            dtype="float32",
         )
         return out
 
 
+
+def create_inputspec(): 
+    inputspec = ()
+    return inputspec
+
 def create_tensor_inputs():
     """
-    PyTorch tensor
+    paddle tensor
     """
     inputs = ()
     return inputs
@@ -39,3 +45,4 @@ def create_numpy_inputs():
     """
     inputs = ()
     return inputs
+

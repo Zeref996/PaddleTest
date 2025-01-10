@@ -4,7 +4,7 @@ import paddle
 
 class LayerCase(paddle.nn.Layer):
     """
-    case名称: mm_zero_size_0_func
+    case名称: dot_zero_size_0_func
     """
 
     def __init__(self):
@@ -17,7 +17,7 @@ class LayerCase(paddle.nn.Layer):
 
         paddle.seed(33)
         np.random.seed(33)
-        out = paddle.mm(x, y,  )
+        out = paddle.dot(x, y,  )
         return out
 
 
